@@ -2,9 +2,6 @@ import axios from 'axios'
 import type { Note, NoteTag } from '../type/note'
 
 const token = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN
-if (!token) {
-  throw new Error('Missing NEXT_PUBLIC_NOTEHUB_TOKEN')
-}
 
 const notehubApi = axios.create({
   baseURL: 'https://notehub-public.goit.study/api',
