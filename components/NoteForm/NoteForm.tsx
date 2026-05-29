@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import type { NoteTag } from '../../type/note'
+import type { NoteTag } from '../../types/note'
 import { ErrorMessage, Field, Form, Formik, type FormikHelpers } from 'formik'
 import { createNote, type CreateNoteParams } from '../../lib/api'
 import toast from 'react-hot-toast'
