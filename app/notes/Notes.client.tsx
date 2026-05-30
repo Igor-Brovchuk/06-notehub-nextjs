@@ -60,7 +60,9 @@ export default function App() {
             <p>Failed to load notes</p>
           )}
 
-          {isSuccess && notes.length > 0 && <NoteList notes={notes} />}
+          {isSuccess && notes.length > 0 && (
+            <NoteList notes={notes} onSelect={() => {}} />
+          )}
         </main>
       </div>
 
