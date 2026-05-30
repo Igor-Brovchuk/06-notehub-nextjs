@@ -1,36 +1,50 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import type { Note } from '@/types/note'
-import { deleteNote } from '@/lib/api'
-import toast from 'react-hot-toast'
 import css from './NoteList.module.css'
+import type { Note } from '../../types/note'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { deleteNote } from '../../lib/api'
+import Link from 'next/link'
 
 interface NoteListProps {
+  onSelect: (note: Note) => void
   notes: Note[]
 }
 
-export default function NoteList({ notes }: NoteListProps) {
+export default function NoteList({ onSelect, notes }: NoteListProps) {
   const queryClient = useQueryClient()
 
-  const { mutate } = useMutation({
+  const mutation = useMutation({
     mutationFn: deleteNote,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notes'] })
-      toast.success('Note deleted successfully')
-    },
-    onError: () => {
-      toast.error('Failed to delete the note')
     },
   })
 
+  if (notes.length === 0) {
+    return null
+  }
   return (
     <ul className={css.list}>
       {notes.map((note) => (
-        <li className={css.listItem} key={note.id}>
+        <li
+          className={css.listItem}
+          onClick={() => onSelect(note)}
+          key={note.id}
+        >
           <h2 className={css.title}>{note.title}</h2>
           <p className={css.content}>{note.content}</p>
           <div className={css.footer}>
             <span className={css.tag}>{note.tag}</span>
-            <button className={css.button} onClick={() => mutate(note.id)}>
+            <Link href={`/notes/${note.id}`} className={css.detailsLink}>
+              View details
+            </Link>
+            <button
+              className={css.button}
+              disabled={mutation.isPending}
+              onClick={(e) => {
+                e.stopPropagation()
+                mutation.mutate(note.id)
+              }}
+            >
               Delete
             </button>
           </div>
